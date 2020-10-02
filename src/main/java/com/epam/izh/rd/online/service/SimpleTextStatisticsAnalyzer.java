@@ -14,7 +14,6 @@ import static java.util.Collections.*;
  * При необходимости, можно создать внутри данного класса дополнительные вспомогательные приватные методы.
  */
 public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
-
     /**
      * Необходимо реализовать функционал подсчета суммарной длины всех слов (пробелы, знаким препинания итд не считаются).
      * Например для текста "One, I - tWo!!" - данный метод должен вернуть 7.
@@ -23,7 +22,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+        int count = 0;
+        for (String i: getWords(text)) {
+            count+= i.length();
+        }
+        return count;
     }
 
     /**
@@ -34,7 +37,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+        return getWords(text).size();
     }
 
     /**
@@ -44,7 +47,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        return 0;
+        return getUniqueWords(text).size();
     }
 
     /**
@@ -57,7 +60,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+        return new ArrayList<String>(Arrays.asList(text.split("\\W+")));
     }
 
     /**
@@ -70,7 +73,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+        return new HashSet<String>(getWords(text));
     }
 
     /**
@@ -82,7 +85,15 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        Map<String, Integer> entryMap = new HashMap<>();
+        for (String i: getWords(text)) {
+            if (entryMap.containsKey(i)) {
+                entryMap.put(i, entryMap.get(i) + 1);
+            } else {
+                entryMap.put(i, 1);
+            }
+        }
+        return entryMap;
     }
 
     /**
@@ -95,6 +106,14 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        Comparator<String> stringLengthComparator = (o1, o2) -> o1.length() - o2.length();
+        List<String> sortedList = getWords(text);
+
+        sortedList.sort(stringLengthComparator);
+        if (Direction.DESC.equals(direction)) {
+            Collections.reverse(sortedList);
+        }
+        return sortedList;
     }
+
 }

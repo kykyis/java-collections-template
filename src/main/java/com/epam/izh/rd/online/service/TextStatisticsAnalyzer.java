@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public interface TextStatisticsAnalyzer {
-
     int countSumLengthOfWords(String text);
 
     int countNumberOfWords(String text);
